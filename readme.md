@@ -14,7 +14,7 @@ Sigue estos pasos para instalar y ejecutar el proyecto.
 ### Clonar el Repositorio
 
 ```bash
-git clone <URL-del-repositorio>
+git clone https://github.com/Yusei-0/guajiritos-test-backend.git
 cd guajiritos-test-backend
 ```
 
