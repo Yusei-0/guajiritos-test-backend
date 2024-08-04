@@ -39,6 +39,37 @@ app.post('/api/admin/change-password', async (req, res) => {
   res.status(200).json({ message: 'Contraseña actualizada correctamente' });
 });
 
+// Middleware para cambiar la contraseña
+app.post('/api/change-password', async (req, res) => {
+  const { userId, oldPassword, newPassword } = req.body;
+
+  if (!userId || !oldPassword || !newPassword) {
+    return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+  }
+
+  const user = app.db.get('users').find({ id: userId }).value();
+
+  if (!user) {
+    return res.status(404).json({ message: 'Usuario no encontrado' });
+  }
+
+  const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
+
+  if (!isPasswordValid) {
+    return res.status(401).json({ message: 'Contraseña antigua incorrecta' });
+  }
+
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+  app.db.get('users')
+    .find({ id: userId })
+    .assign({ password: hashedPassword })
+    .write();
+
+  res.status(200).json({ message: 'Contraseña actualizada correctamente' });
+});
+
+
 // Usa el router de json-server
 app.use('/api', router);
 
