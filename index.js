@@ -56,7 +56,7 @@ app.post('/api/change-password', async (req, res) => {
   const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
 
   if (!isPasswordValid) {
-    return res.status(401).json({ message: 'Contraseña antigua incorrecta' });
+    res.status(400).jsonp('Old password is wrong')
   }
 
   const hashedPassword = await bcrypt.hash(newPassword, 10);
